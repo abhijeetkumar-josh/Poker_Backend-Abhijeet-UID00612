@@ -19,7 +19,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 class FilterTicketView(APIView):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [AllowAny]
 
     def post(self, request):
         print(request.user)
@@ -30,7 +30,7 @@ class FilterTicketView(APIView):
             user_id=request.user.id
         )
         
-        if ticket_type & estimate_date :
+        if ticket_type and estimate_date :
             queryset = queryset.filter(ticket__type=ticket_type, estimate_date=estimate_date)
         elif ticket_type:
             queryset = queryset.filter(ticket__type=ticket_type)

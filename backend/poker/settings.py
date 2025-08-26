@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    "corsheaders",
+    'rest_framework.authtoken',
+    'corsheaders',
     'user',
     'gamecreation',
     'api_keys',
@@ -99,9 +101,9 @@ DATABASES = {
 
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
@@ -134,31 +136,53 @@ AUTH_PASSWORD_VALIDATORS = [
 #     'django.contrib.auth.backends.ModelBackend',
 # ]
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True   # Use TLS encryption
+EMAIL_USE_SSL = False  # Set True if using port 465
+
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')  
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
 
 PASSWORD_RESET_TIMEOUT = 60 * 60 * 24
 
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5176",
+#     "http://127.0.0.1:5176",
+#     "http://192.168.2.223:5177",
+# ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
+    "http://localhost:5176",
+    "http://127.0.0.1:5176",
+    "http://192.168.2.223:5177",
 ]
 
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SAMESITE = "None"
+CORS_ALLOW_ALL_ORIGINS = True
 
-SESSION_COOKIE_SECURE = False  
-CSRF_COOKIE_SECURE = False
+# SESSION_COOKIE_SAMESITE = "None"
+# CSRF_COOKIE_SAMESITE = "None"
+
+# SESSION_COOKIE_SECURE = False  
+# CSRF_COOKIE_SECURE = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -191,3 +215,4 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=users,todos,projects',
 ]
+

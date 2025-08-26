@@ -5,7 +5,8 @@ from rest_framework.authtoken.views import obtain_auth_token
 api_urls = [
     path('user/', include('user.urls')),
     path('profile/', include('gamecreation.urls')),
-    path('ticket/', include('ticket.urls'))
+    path('ticket/', include('ticket.urls')),
+    path('invite/', include('Invite.urls')),
 ]
 
 

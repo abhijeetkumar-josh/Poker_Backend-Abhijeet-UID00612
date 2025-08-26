@@ -8,8 +8,7 @@ from ticket.models import ticket,estimate
 class ticketSerializer(serializers.ModelSerializer):
     class Meta:
         model = ticket
-        fields = ['summary','description','type']
-        depth=1
+        fields = ['id','key','summary','description','type','pokerid','priority']
 
 class estimateSerializer(serializers.ModelSerializer):
     ticket = ticketSerializer(read_only=True)

@@ -8,7 +8,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('ticket', '0001_initial'), ('ticket', '0002_estimate'), ('ticket', '0003_alter_estimate_estimate'), ('ticket', '0004_estimate_estimate_date')]
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

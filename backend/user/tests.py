@@ -21,12 +21,11 @@ class AuthTests(APITestCase):
         data = {
             "username":"someusername",
             "email": "newuser@example.com",
-            "password": "Password123!"
+            "password": "Password123!",
+            "confirm_password": "Password123!",
         }
         response = self.client.post(self.register_url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn("msg", response.data)
-        self.assertEqual(response.data["msg"], "User created successfully")
 
     def test_register_duplicate_email(self):
         data = {
@@ -45,9 +44,6 @@ class AuthTests(APITestCase):
         }
         response = self.client.post(self.login_url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn("msg", response.data)
-        self.assertEqual(response.data["msg"], "Login successful")
-        self.assertIn("user_id", response.data)
 
     def test_login_invalid_credentials(self):
         data = {

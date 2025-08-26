@@ -5,6 +5,7 @@ from django.core.validators import MinLengthValidator
 from django.utils import timezone
 import uuid
 import random
+from datetime import timedelta
 
 class UserManager(BaseUserManager):
     """
@@ -54,3 +55,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+class SignUpInfo(models.Model):
+    email = models.EmailField()
+    username = models.CharField(max_length=125)
+    password = models.CharField(max_length=255)
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    token_created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_token_valid(self, expiry_hours=24):
+        expiry_time = self.token_created_at + timedelta(hours=expiry_hours)
+        return timezone.now() <= expiry_time
+
+
+    def __str__(self):
+        return f"Signup pending for {self.email}"
