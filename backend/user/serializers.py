@@ -32,7 +32,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             user.full_clean()
             user.save()
         except ValidationError as e:
-            print(e)
             raise serializers.ValidationError(e)
 
         except IntegrityError:

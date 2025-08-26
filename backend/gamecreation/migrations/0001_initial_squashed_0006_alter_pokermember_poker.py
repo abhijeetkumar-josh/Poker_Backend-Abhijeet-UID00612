@@ -8,7 +8,6 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    replaces = [('gamecreation', '0001_initial'), ('gamecreation', '0002_initial'), ('gamecreation', '0003_remove_pokerboard_manager_pokerboard_manager'), ('gamecreation', '0004_alter_pokermember_role'), ('gamecreation', '0005_rename_manager_pokerboard_member'), ('gamecreation', '0006_alter_pokermember_poker')]
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

@@ -10,7 +10,7 @@ class ApiKeys(models.Model):
       user
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='key_membership')
-    apikey=models.CharField(max_length=125,validators=[MinLengthValidator(20)])
+    apikey=models.TextField(validators=[MinLengthValidator(20)])
     cloudsite=models.CharField(max_length=125,validators=[MinLengthValidator(10)])
 
     def __str__(self):

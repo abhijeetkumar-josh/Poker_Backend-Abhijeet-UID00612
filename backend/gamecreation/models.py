@@ -17,6 +17,7 @@ class PokerBoard(models.Model):
     pokerid = models.AutoField(primary_key=True)
     game_name = models.CharField(max_length=125,validators=[MinLengthValidator(3)])
     game_description=models.TextField(MinLengthValidator(3))
+    # manager=models.EmailField()
 
     def __str__(self):
         return self.game_name
@@ -37,9 +38,12 @@ class pokermember(models.Model):
                                on_delete=models.CASCADE,
                                related_name='poker_membership')
     role=models.IntegerField(choices=ROLE_CHOICES,default=0)
+    accept =models.BooleanField(default=False)
+
+
     class Meta:
         unique_together = ('poker', 'member')
 
     def __str__(self):
-        return f"{self.poker.pokerid} in {self.member.email}"
+        return f"{self.poker.pokerid} in {self.member.email} && {self.accept}"
     
