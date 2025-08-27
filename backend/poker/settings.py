@@ -27,21 +27,33 @@ SECRET_KEY = 'django-insecure-r1b%))f205!1i@80%tv49obe*9=s7&!^tg-hv+gb)aw@vu++xw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    'user',
+    'gamecreation',
+    'api_keys',
+    'Invite',
+    'ticket',
 ]
 
+AUTH_USER_MODEL = 'user.CustomUser'
+
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,7 +83,6 @@ TEMPLATES = [
 TEMPLATE_DEBUG = DEBUG
 
 ASGI_APPLICATION = 'poker.asgi.application'
-WSGI_APPLICATION = 'poker.wsgi.application'
 
 
 # Database
@@ -120,9 +131,46 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# AUTHENTICATION_BACKENDS = [
+#     'user.authbackend.EmailBackend',   
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True 
+EMAIL_USE_SSL = False 
+
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')  
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+
+PASSWORD_RESET_TIMEOUT = 60 * 60 * 24
+
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5176",
+    "http://127.0.0.1:5176",
+    "http://192.168.2.223:5177",
+]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 LANGUAGE_CODE = 'en-us'
 
@@ -134,22 +182,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Use nose to run all tests
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-# Tell nose to measure coverage on the 'foo' and 'bar' apps
 NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=users,todos,projects',
 ]
+
