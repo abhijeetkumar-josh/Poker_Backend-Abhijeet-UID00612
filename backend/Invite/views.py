@@ -1,37 +1,46 @@
 from rest_framework.views import APIView
+from gamecreation.models import pokermember
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated,BasePermission
 from rest_framework.response import Response
 from rest_framework import status
-from django.contrib.auth import authenticate,login
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import AllowAny
-from rest_framework import serializers
-from api_keys.models import ApiKeys
-from Invite.models import Invite
-from ticket.models import ticket,estimate
-from gamecreation.models import PokerBoard,pokermember
-from django.contrib.auth import get_user_model
-import json
-import os
-import math
-import requests
-from django.http import JsonResponse
-from django.views.decorators.http import require_GET
-from django.views.decorators.csrf import csrf_exempt
-from requests.auth import HTTPBasicAuth
 
 User = get_user_model()
 
 
+class IsInvitedUser(BasePermission):
+    
+    def has_object_permission(self, request, view, obj):
+        return obj.member == request.user
+
+
 class AcceptInvitationView(APIView):
-    permission_classes = [AllowAny]
-    def get(self, request, pkuid):
-        try:
-           poker=pokermember.objects.get(id=pkuid)
-        except pokermember.DoesNotExist:
-           return Response('Wrong Invitation',status=status.HTTP_400_BAD_REQUEST)
-        print(poker)
-        poker.accept=True
+
+    permission_classes = [IsAuthenticated, IsInvitedUser]
+
+    def post(self, request, pkuid):
+        
+        poker = get_object_or_404(pokermember, id=pkuid)
+        self.check_object_permissions(request, poker)
+
+        if poker.accept:
+            return Response(
+                {"detail": "Invitation already accepted."},
+                status=status.HTTP_200_OK,
+            )
+
+        poker.accept = True
         poker.save()
-        return Response('Invitation Accepted',status=status.HTTP_200_OK)
+
+        return Response(
+            {
+                "detail": "Invitation accepted successfully.",
+                "pokerboard_id": poker.poker.pokerid,
+                "role": poker.get_role_display(),
+                "member": poker.member.email,
+            },
+            status=status.HTTP_200_OK,
+        )
 
         

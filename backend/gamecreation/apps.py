@@ -4,3 +4,4 @@ from django.apps import AppConfig
 class GamecreationConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'gamecreation'
+    verbose_name = 'Game Creation Module'

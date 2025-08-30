@@ -1,32 +1,44 @@
 from django.conf import settings
 from django.db import models
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator,MaxLengthValidator
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
 class PokerBoard(models.Model):   
     """
-        
+    Represents a PokerBoard game where users can be members with different roles.
+
+    Fields:
+        member (ManyToManyField): Users who are members of the board, through 'pokermember'.
+        pokerid (AutoField): Primary key for the PokerBoard.
+        game_name (CharField): Name of the game (minimum 3 characters).
+        game_description (TextField): Description of the game (minimum 3 characters).
     """
+
     member = models.ManyToManyField(
         User,
         through='pokermember',
         related_name='poker'
     )
     pokerid = models.AutoField(primary_key=True)
-    game_name = models.CharField(max_length=125,validators=[MinLengthValidator(3)])
-    game_description=models.TextField(MinLengthValidator(3))
-    # manager=models.EmailField()
+    game_name = models.CharField(max_length=125,validators=[MinLengthValidator(1)])
+    game_description=models.TextField(validators=[MaxLengthValidator(1000)])
 
     def __str__(self):
         return self.game_name
 
 class pokermember(models.Model):
     """
-    Needed fields
-    
+    Represents the membership of a user in a PokerBoard with a specific role.
+
+    Fields:
+        poker (ForeignKey): The PokerBoard the member belongs to.
+        member (ForeignKey): The user who is a member of the board.
+        role (IntegerField): Role of the member (Spectator, Developer, Guest, Manager).
+        accept (BooleanField): Whether the invitation to join is accepted.
     """
+
     ROLE_CHOICES = [
         [0, 'Spectator'],
         [1, 'Developer'],
@@ -45,5 +57,5 @@ class pokermember(models.Model):
         unique_together = ('poker', 'member')
 
     def __str__(self):
-        return f"{self.poker.pokerid} in {self.member.email} && {self.accept}"
+        return f"{self.member.email} in {self.poker.pokerid} (Accepted: {self.accept})"
     

@@ -39,7 +39,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     - date_joined (default should be time of object creation)
     - last_name (max_length=150)
     """
-    username=models.CharField(max_length=125,blank=False,validators=[MinLengthValidator(1)])
+    username=models.CharField(max_length=125,unique=True,blank=False,null=False)
     email = models.EmailField(unique=True, blank=False, null= False)
     firstname = models.CharField(max_length=125, blank=True, null= True)
     lastname = models.CharField(max_length=125, blank=True, null= True)
