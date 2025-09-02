@@ -5,8 +5,20 @@ from gamecreation.models import PokerBoard
 
 class Invite(models.Model):   
     """
-       
+    Represents an invitation for a user (by email) to join a PokerBoard.
+
+    Fields:
+        pokerboard (ForeignKey): The PokerBoard to which the guest is invited.
+        host (ForeignKey): The user who sent the invitation.
+        guest (EmailField): Email of the invited guest.
+        accept (BooleanField): Indicates whether the invite has been accepted (default False).
+        role (IntegerField): Role of the guest in the PokerBoard, choices:
+            0 - Spectator
+            1 - Developer
+            2 - Guest
+            3 - Manager
     """
+    
     ROLE_CHOICES = [
         [0, 'Spectator'],
         [1, 'Developer'],

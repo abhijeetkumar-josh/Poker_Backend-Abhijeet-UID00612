@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('pokerid', models.AutoField(primary_key=True, serialize=False)),
                 ('game_name', models.CharField(max_length=125, validators=[django.core.validators.MinLengthValidator(3)])),
-                ('game_description', models.TextField(verbose_name=django.core.validators.MinLengthValidator(3))),
+                ('game_description', models.TextField(validators=[django.core.validators.MinLengthValidator(3)])),
             ],
         ),
         migrations.CreateModel(

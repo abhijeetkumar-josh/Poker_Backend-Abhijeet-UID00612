@@ -16,8 +16,7 @@ class PokerBoard(models.Model):
     )
     pokerid = models.AutoField(primary_key=True)
     game_name = models.CharField(max_length=125,validators=[MinLengthValidator(3)])
-    game_description=models.TextField(MinLengthValidator(3))
-    # manager=models.EmailField()
+    game_description=models.TextField(validators=[MinLengthValidator(3)])
 
     def __str__(self):
         return self.game_name

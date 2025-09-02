@@ -7,4 +7,4 @@ class PokerMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = pokermember
         fields = ['id', 'role', 'poker','accept']
-        depth=2
+        depth=1
